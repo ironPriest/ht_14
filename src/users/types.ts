@@ -1,9 +1,14 @@
+import { IsEmail, Length } from 'class-validator';
+
 export class UserInputDTO {
-  constructor(
-    public login: string,
-    public password: string,
-    public email: string,
-  ) {}
+  @Length(3, 10)
+  login: string;
+
+  @Length(6, 20)
+  password: string;
+
+  @IsEmail()
+  email: string;
 }
 
 export class UserViewDTO {

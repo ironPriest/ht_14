@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
 import * as request from 'supertest';
@@ -26,6 +26,8 @@ describe('blogs', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.enableCors();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
     server = app.getHttpServer();
   });
@@ -56,6 +58,7 @@ describe('blogs', () => {
       const createdBlog = await request(server)
         .post('/blogs')
         .send(properBlogInputDTO);
+
       expect(createdBlog.status).toBe(201);
 
       const newBlog = createdBlog.body;

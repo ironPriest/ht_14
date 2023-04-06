@@ -1,9 +1,7 @@
 export class BlogInputDTO {
-  constructor(
-    public name: string,
-    public websiteUrl: string,
-    public description: string,
-  ) {}
+  name: string;
+  websiteUrl: string;
+  description: string;
 }
 
 export class BlogUpdateDTO {
