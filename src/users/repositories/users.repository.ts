@@ -18,4 +18,10 @@ export class UsersRepository {
   async delete(userId: string) {
     await this.UserModel.deleteOne().where('_id').equals(userId);
   }
+
+  async getByLoginOrEmail(loginOrEmail: string): Promise<UserDocument> {
+    return this.UserModel.findOne({
+      $or: [{ login: loginOrEmail }, { email: loginOrEmail }],
+    });
+  }
 }

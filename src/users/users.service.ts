@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserInputDTO } from './types';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserModelType } from './users-schema';
+import { User, UserDocument, UserModelType } from './users-schema';
 import { UsersRepository } from './repositories/users.repository';
 
 @Injectable()
@@ -20,5 +20,9 @@ export class UsersService {
 
   async delete(userId: string) {
     await this.usersRepository.delete(userId);
+  }
+
+  async getByLoginOrEmail(loginOrEmail: string): Promise<UserDocument> {
+    return this.usersRepository.getByLoginOrEmail(loginOrEmail);
   }
 }

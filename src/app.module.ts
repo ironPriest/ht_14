@@ -19,6 +19,8 @@ import { User, UserSchema } from './users/users-schema';
 import { UsersService } from './users/users.service';
 import { UsersRepository } from './users/repositories/users.repository';
 import { UsersQueryRepository } from './users/repositories/users-query.repository';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 const mongoUri = process.env.mongoURI || 'mongodb://0.0.0.0:27017/blog_nest';
 
@@ -30,6 +32,8 @@ const mongoUri = process.env.mongoURI || 'mongodb://0.0.0.0:27017/blog_nest';
       { name: Post.name, schema: PostSchema },
       { name: User.name, schema: UserSchema },
     ]),
+    AuthModule,
+    UsersModule,
   ],
   controllers: [
     AppController,
