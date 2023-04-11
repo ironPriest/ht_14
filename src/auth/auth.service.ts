@@ -22,4 +22,20 @@ export class AuthService {
     const payload = { userId: user.id };
     return { accessToken: await this.jwtService.signAsync(payload) };
   }
+
+  async validateUser(loginOrEmail: string, pass: string): Promise<any> {
+    const user = await this.usersService.getByLoginOrEmail(loginOrEmail);
+    if (user && user.passwordHash === pass) {
+      const { passwordHash, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+
+  async login(user: any) {
+    const payload = { userId: user.id };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
 }

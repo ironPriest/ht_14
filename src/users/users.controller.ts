@@ -14,9 +14,9 @@ import {
 import { UserInputDTO } from './types';
 import { UsersService } from './users.service';
 import { UsersQueryRepository } from './repositories/users-query.repository';
-import { AuthGuard } from '../auth.guard';
+import { BasicAuthGuard } from '../basic-auth.guard';
 
-@UseGuards(AuthGuard)
+@UseGuards(BasicAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(
