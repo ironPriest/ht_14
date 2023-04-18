@@ -25,6 +25,7 @@ export class AuthService {
 
   async validateUser(loginOrEmail: string, pass: string): Promise<any> {
     const user = await this.usersService.getByLoginOrEmail(loginOrEmail);
+    console.log('user in validateUser() ==> ', user);
     if (user && user.passwordHash === pass) {
       const { passwordHash, ...result } = user;
       return result;
@@ -33,9 +34,15 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { userId: user.id };
+    //const payload = { userId: user.id };
+    const payload = {
+      username: user._doc.login,
+      sub: user._doc._id.toString(),
+    };
+    console.log('user in login() ==> ', user);
+    console.log('payload in login() ==>', payload);
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
     };
   }
 }

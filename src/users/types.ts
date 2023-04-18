@@ -19,3 +19,11 @@ export class UserViewDTO {
     public createdAt: string,
   ) {}
 }
+
+export class AuthorizedUserViewDTO {
+  constructor(
+    public userId: string,
+    public login: string,
+    public email: string,
+  ) {}
+}

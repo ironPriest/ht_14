@@ -5,7 +5,11 @@ import { UsersModule } from '../users/users.module';
 import { jwtConstants } from './constants';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from './local.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
+import { JwtStrategy } from './strategies/jwt.strategies';
+import { UsersQueryRepository } from '../users/repositories/users-query.repository';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from '../users/users-schema';
 
 @Module({
   imports: [
@@ -14,11 +18,12 @@ import { LocalStrategy } from './local.strategy';
     JwtModule.register({
       global: true,
       secret: jwtConstants.JWT_SECRET,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '10m' },
     }),
     PassportModule,
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
-  providers: [AuthService, LocalStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, UsersQueryRepository],
   controllers: [AuthController],
   exports: [AuthService],
 })
