@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { PassportLocalAuthGuard } from './guards/passport-local-auth.guard';
 import { PassportJwtAuthGuard } from './guards/passport-jwt-auth.guard';
 import { UsersQueryRepository } from '../users/repositories/users-query.repository';
+import { CurrentUserId } from './current-user.param.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -33,11 +34,17 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
-  @UseGuards(PassportJwtAuthGuard)
+  /*@UseGuards(PassportJwtAuthGuard)
   @Get('me')
   getProfile(@Request() req) {
     //console.log('user in req ==> ', req.user);
     const userId = req.user.userId;
     return this.usersQueryRepository.getAuthorizedUser(userId);
+  }*/
+
+  @UseGuards(PassportJwtAuthGuard)
+  @Get('me')
+  getProfile(@CurrentUserId() currentUserId: string) {
+    return this.usersQueryRepository.getAuthorizedUser(currentUserId);
   }
 }

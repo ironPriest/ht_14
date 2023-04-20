@@ -28,6 +28,7 @@ export class AuthService {
     console.log('user in validateUser() ==> ', user);
     if (user && user.passwordHash === pass) {
       const { passwordHash, ...result } = user;
+      console.log('result in validateUser ==> ', result);
       return result;
     }
     return null;
