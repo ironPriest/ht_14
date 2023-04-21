@@ -21,6 +21,7 @@ export class User {
       login: DTO.login,
       email: DTO.email,
       createdAt: new Date().toISOString(),
+      passwordHash: DTO.password,
     });
     return user;
   }
