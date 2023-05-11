@@ -53,6 +53,7 @@ export class AuthController {
   }
 
   @Post('registration')
+  @HttpCode(204)
   async registration(@Body() inputDTO: UserInputDTO) {
     await this.usersService.create(inputDTO);
   }
