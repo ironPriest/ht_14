@@ -1,20 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UserInputDTO } from './types';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument, UserModelType } from './users-schema';
 import { UsersRepository } from './repositories/users.repository';
+import { AuthService } from '../auth/auth.service';
+import bcrypt from 'bcrypt';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name)
     private UserModel: UserModelType,
-    protected usersRepository: UsersRepository,
+    protected usersRepository: UsersRepository, //@Inject(forwardRef(() => AuthService)) //protected authService: AuthService,
+    protected emailService: EmailService,
   ) {}
 
   async create(DTO: UserInputDTO): Promise<string> {
+    //const passwordHash = await this.authService.generateHash(DTO.password);
+
+    console.log('DTO --> ', DTO);
+
+    DTO.password = await bcrypt.hash(DTO.password, 10);
     const user = this.UserModel.createUser(DTO, this.UserModel);
     await this.usersRepository.save(user);
+
+    console.log('DTO --> ', DTO);
+
+    await this.emailService.sendEmail(
+      DTO.email,
+      'subject',
+      user.emailConfirmation.confirmationCode,
+    );
+
     return user._id.toString();
   }
 

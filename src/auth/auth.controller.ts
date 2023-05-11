@@ -5,18 +5,22 @@ import {
   Post,
   UseGuards,
   Get,
+  Body,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { PassportLocalAuthGuard } from './guards/passport-local-auth.guard';
 import { PassportJwtAuthGuard } from './guards/passport-jwt-auth.guard';
 import { UsersQueryRepository } from '../users/repositories/users-query.repository';
 import { CurrentUserId } from './current-user.param.decorator';
+import { UserInputDTO } from '../users/types';
+import { UsersService } from '../users/users.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     protected usersQueryRepository: UsersQueryRepository,
+    protected usersService: UsersService,
   ) {}
 
   /*@Post('login')
@@ -46,5 +50,10 @@ export class AuthController {
   @Get('me')
   getProfile(@CurrentUserId() currentUserId: string) {
     return this.usersQueryRepository.getAuthorizedUser(currentUserId);
+  }
+
+  @Post('registration')
+  async registration(@Body() inputDTO: UserInputDTO) {
+    await this.usersService.create(inputDTO);
   }
 }

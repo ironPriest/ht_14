@@ -2,10 +2,12 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { UserDocument } from '../users/users-schema';
 import { JwtService } from '@nestjs/jwt';
+import bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
   constructor(
+    //@Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
@@ -25,25 +27,33 @@ export class AuthService {
 
   async validateUser(loginOrEmail: string, pass: string): Promise<any> {
     const user = await this.usersService.getByLoginOrEmail(loginOrEmail);
-    console.log('user in validateUser() ==> ', user);
-    if (user && user.passwordHash === pass) {
+    if (!user) return null;
+
+    /*if (user && user.passwordHash === pass) {
       const { passwordHash, ...result } = user;
-      console.log('result in validateUser ==> ', result);
       return result;
-    }
-    return null;
+    }*/
+
+    const result = await bcrypt.compare(pass, user.passwordHash);
+    if (!result) return null;
+
+    return user;
   }
 
   async login(user: any) {
     //const payload = { userId: user.id };
     const payload = {
-      username: user._doc.login,
-      sub: user._doc._id.toString(),
+      username: user.login,
+      sub: user._id.toString(),
     };
     console.log('user in login() ==> ', user);
     console.log('payload in login() ==>', payload);
     return {
       accessToken: this.jwtService.sign(payload),
     };
+  }
+
+  async generateHash(password: string) {
+    return bcrypt.hash(password, 10);
   }
 }

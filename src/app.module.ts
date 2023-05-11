@@ -21,6 +21,7 @@ import { UsersRepository } from './users/repositories/users.repository';
 import { UsersQueryRepository } from './users/repositories/users-query.repository';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { EmailService } from './email/email.service';
 
 const mongoUri = process.env.mongoURI || 'mongodb://0.0.0.0:27017/blog_nest';
 
@@ -54,6 +55,7 @@ const mongoUri = process.env.mongoURI || 'mongodb://0.0.0.0:27017/blog_nest';
     UsersService,
     UsersRepository,
     UsersQueryRepository,
+    EmailService,
   ],
 })
 export class AppModule {}

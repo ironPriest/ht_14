@@ -11,6 +11,11 @@ export class UserInputDTO {
   email: string;
 }
 
+export class HashedPasswordDTO {
+  login: string;
+  email: string;
+}
+
 export class UserViewDTO {
   constructor(
     public id: string,
