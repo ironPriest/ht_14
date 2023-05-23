@@ -14,6 +14,7 @@ import { UsersQueryRepository } from '../users/repositories/users-query.reposito
 import { CurrentUserId } from './current-user.param.decorator';
 import { UserInputDTO } from '../users/types';
 import { UsersService } from '../users/users.service';
+import { DoubleEmailLoginGuard } from './guards/double-email-login.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -52,6 +53,7 @@ export class AuthController {
     return this.usersQueryRepository.getAuthorizedUser(currentUserId);
   }
 
+  @UseGuards(DoubleEmailLoginGuard)
   @Post('registration')
   @HttpCode(204)
   async registration(@Body() inputDTO: UserInputDTO) {
