@@ -11,6 +11,11 @@ export class UserInputDTO {
   email: string;
 }
 
+export class ResendingDTO {
+  @IsEmail()
+  email: string;
+}
+
 export class HashedPasswordDTO {
   login: string;
   email: string;

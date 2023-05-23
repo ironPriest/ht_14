@@ -12,9 +12,10 @@ import { PassportLocalAuthGuard } from './guards/passport-local-auth.guard';
 import { PassportJwtAuthGuard } from './guards/passport-jwt-auth.guard';
 import { UsersQueryRepository } from '../users/repositories/users-query.repository';
 import { CurrentUserId } from './current-user.param.decorator';
-import { UserInputDTO } from '../users/types';
+import { ResendingDTO, UserInputDTO } from '../users/types';
 import { UsersService } from '../users/users.service';
 import { DoubleEmailLoginGuard } from './guards/double-email-login.guard';
+import { DoubleConfirmationGuard } from './guards/double-confirmation.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -58,5 +59,12 @@ export class AuthController {
   @HttpCode(204)
   async registration(@Body() inputDTO: UserInputDTO) {
     await this.usersService.create(inputDTO);
+  }
+
+  @UseGuards(DoubleConfirmationGuard)
+  @Post('registration-email-resending')
+  @HttpCode(204)
+  async registrationEmailResending(@Body() resendingDTO: ResendingDTO) {
+    await this.usersService.registrationEmailResend(resendingDTO.email);
   }
 }

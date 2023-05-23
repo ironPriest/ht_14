@@ -18,7 +18,7 @@ export class UsersService {
 
   async create(DTO: UserInputDTO): Promise<string> {
     //const passwordHash = await this.authService.generateHash(DTO.password);
-
+    //todo --> DTO change?
     console.log('DTO --> ', DTO);
 
     DTO.password = await bcrypt.hash(DTO.password, 10);
@@ -42,5 +42,16 @@ export class UsersService {
 
   async getByLoginOrEmail(loginOrEmail: string): Promise<UserDocument> {
     return this.usersRepository.getByLoginOrEmail(loginOrEmail);
+  }
+
+  async registrationEmailResend(email: string) {
+    const user = await this.usersRepository.getByLoginOrEmail(email);
+    if (!user) return null;
+
+    await this.emailService.sendEmail(
+      email,
+      'subject',
+      user.emailConfirmation.confirmationCode,
+    );
   }
 }
