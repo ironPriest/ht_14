@@ -18,12 +18,19 @@ export class DoubleConfirmationGuard implements CanActivate {
 
     const user = await this.usersService.getByLoginOrEmail(email);
 
+    if (!user) {
+      throw new HttpException(
+        {
+          message: [{ message: 'no such email', field: 'email' }],
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     if (user.emailConfirmation.isConfirmed === true) {
       throw new HttpException(
         {
-          message: [
-            { message: 'login or email already in use', field: 'email' },
-          ],
+          message: [{ message: 'already confirmed', field: 'email' }],
         },
         HttpStatus.BAD_REQUEST,
       );

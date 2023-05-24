@@ -6,6 +6,7 @@ import { UsersRepository } from './repositories/users.repository';
 import { AuthService } from '../auth/auth.service';
 import bcrypt from 'bcrypt';
 import { EmailService } from '../email/email.service';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -47,6 +48,10 @@ export class UsersService {
   async registrationEmailResend(email: string) {
     const user = await this.usersRepository.getByLoginOrEmail(email);
     if (!user) return null;
+
+    //todo --> is this correct?
+    user.emailConfirmation.confirmationCode = v4();
+    await this.usersRepository.save(user);
 
     await this.emailService.sendEmail(
       email,
