@@ -1,13 +1,16 @@
-import { IsUrl, Length } from 'class-validator';
+import { IsNotEmpty, IsUrl, Length } from 'class-validator';
 
 export class BlogInputDTO {
+  @IsNotEmpty()
   @Length(1, 15)
   name: string;
 
+  @IsNotEmpty()
   @IsUrl()
   @Length(1, 100)
   websiteUrl: string;
 
+  @IsNotEmpty()
   @Length(1, 500)
   description: string;
 }
