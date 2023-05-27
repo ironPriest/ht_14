@@ -7,21 +7,25 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../../users/users.service';
 import { Request } from 'express';
+import { UsersRepository } from '../../users/repositories/users.repository';
 
 @Injectable()
-export class DoubleConfirmationGuard implements CanActivate {
-  constructor(protected usersService: UsersService) {}
+export class ConfirmationGuard implements CanActivate {
+  constructor(
+    protected usersService: UsersService,
+    protected usersRepository: UsersRepository,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
-    const email = request.body.email;
 
-    const user = await this.usersService.getByLoginOrEmail(email);
+    const code = request.body.code;
+    const user = await this.usersRepository.getByCode(code);
 
     if (!user) {
       throw new HttpException(
         {
-          message: [{ message: 'no such email', field: 'email' }],
+          message: [{ message: 'no such user', field: 'code' }],
         },
         HttpStatus.BAD_REQUEST,
       );

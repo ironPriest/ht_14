@@ -59,4 +59,15 @@ export class UsersService {
       user.emailConfirmation.confirmationCode,
     );
   }
+
+  async confirm(code: string) {
+    const user = await this.usersRepository.getByCode(code);
+    console.log('code -->', code);
+    console.log('user -->', user);
+    if (!user) return null;
+
+    user.emailConfirmation.isConfirmed = true;
+
+    await this.usersRepository.save(user);
+  }
 }

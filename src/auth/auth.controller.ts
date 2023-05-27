@@ -6,6 +6,7 @@ import {
   UseGuards,
   Get,
   Body,
+  Param,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { PassportLocalAuthGuard } from './guards/passport-local-auth.guard';
@@ -15,7 +16,8 @@ import { CurrentUserId } from './current-user.param.decorator';
 import { ResendingDTO, UserInputDTO } from '../users/types';
 import { UsersService } from '../users/users.service';
 import { DoubleEmailLoginGuard } from './guards/double-email-login.guard';
-import { DoubleConfirmationGuard } from './guards/double-confirmation.guard';
+import { EmailGuard } from './guards/email.guard';
+import { ConfirmationGuard } from './guards/confirmation.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -61,10 +63,18 @@ export class AuthController {
     await this.usersService.create(inputDTO);
   }
 
-  @UseGuards(DoubleConfirmationGuard)
+  @UseGuards(EmailGuard)
   @Post('registration-email-resending')
   @HttpCode(204)
   async registrationEmailResending(@Body() resendingDTO: ResendingDTO) {
     await this.usersService.registrationEmailResend(resendingDTO.email);
+  }
+
+  @UseGuards(ConfirmationGuard)
+  @Post('registration-confirmation')
+  @HttpCode(204)
+  async registrationConfirmation(@Body('code') code: string) {
+    console.log(' -- confirmation endpoint enter -- ');
+    await this.usersService.confirm(code);
   }
 }

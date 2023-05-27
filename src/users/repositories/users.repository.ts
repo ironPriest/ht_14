@@ -24,4 +24,10 @@ export class UsersRepository {
       $or: [{ login: loginOrEmail }, { email: loginOrEmail }],
     });
   }
+
+  async getByCode(code: string): Promise<UserDocument> {
+    return this.UserModel.findOne()
+      .where('emailConfirmation.confirmationCode')
+      .equals(code);
+  }
 }
