@@ -1,6 +1,14 @@
+import { IsUrl, Length } from 'class-validator';
+
 export class BlogInputDTO {
+  @Length(1, 15)
   name: string;
+
+  @IsUrl()
+  @Length(1, 100)
   websiteUrl: string;
+
+  @Length(1, 500)
   description: string;
 }
 
