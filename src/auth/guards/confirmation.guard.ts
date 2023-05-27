@@ -34,7 +34,7 @@ export class ConfirmationGuard implements CanActivate {
     if (user.emailConfirmation.isConfirmed === true) {
       throw new HttpException(
         {
-          message: [{ message: 'already confirmed', field: 'email' }],
+          message: [{ message: 'already confirmed', field: 'code' }],
         },
         HttpStatus.BAD_REQUEST,
       );
