@@ -1,8 +1,10 @@
 import { IsNotEmpty, IsUrl, Length } from 'class-validator';
+import { Transform, TransformFnParams } from 'class-transformer';
 
 export class BlogInputDTO {
   @IsNotEmpty()
   @Length(1, 15)
+  @Transform(({ value }: TransformFnParams) => value?.trim())
   name: string;
 
   @IsNotEmpty()
