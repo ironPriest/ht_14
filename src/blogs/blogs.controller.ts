@@ -32,6 +32,7 @@ export class BlogsController {
   @UseGuards(BasicAuthGuard)
   @Post()
   async createBlog(@Body() inputDTO: BlogInputDTO) {
+    console.log('inputDTO --> ', inputDTO);
     const blogId: string = await this.blogsService.create(inputDTO);
     const blog = await this.blogsQueryRepository.getBlog(blogId);
     if (!blog) throw new BadRequestException();
